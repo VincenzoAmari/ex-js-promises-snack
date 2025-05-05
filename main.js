@@ -47,3 +47,42 @@ getPostAndUser(1).then((post) => console.log(post));
 // 🎯 Bonus: HOF con closure per memorizzare l'ultimo lancio
 // Modifica la funzione in creaLanciaDado(), che restituisce una closure che memorizza l'ultimo risultato.
 // Se il numero esce due volte di fila, stampa "Incredibile!".
+
+function lanciaDado() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() < 0.2) {
+        reject("il dado si è incastrato!");
+        return;
+      }
+
+      const numero = Math.floor(Math.random() * 6) + 1;
+      resolve(numero);
+    }, 3000);
+  });
+}
+
+lanciaDado()
+  .then((num) => console.log("Hai lanciato:", num))
+  .catch((err) => console.error("Errore:", err));
+
+function creaLanciaDado() {
+  let ultimoNumero = null;
+
+  return function () {
+    return lanciaDado()
+      .then((numero) => {
+        if (numero === ultimoNumero) {
+          console.log("che fortuna!");
+        }
+        ultimoNumero = numero;
+        console.log("Hail lanciato:", numero);
+        return numero;
+      })
+      .catch((err) => console.error("Errore:", err));
+  };
+}
+
+const lancia = creaLanciaDado();
+lancia();
+lancia();
