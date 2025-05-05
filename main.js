@@ -20,5 +20,23 @@ function getPostTitle(id) {
     .then((response) => response.json())
     .then((data) => data.title);
 }
-
 getPostTitle(2).then((title) => console.log(title));
+
+function getPost(id) {
+  return fetch(`https://dummyjson.com/posts/${id}`).then((res) => res.json());
+}
+getPost(1).then((data) => console.log(data));
+
+function getPostAndUser(id) {
+  return fetch(`https://dummyjson.com/posts/${id}`)
+    .then((res) => res.json())
+    .then((post) => {
+      return fetch(`https://dummyjson.com/users/${post.userId}`)
+        .then((res) => res.json())
+        .then((user) => {
+          post.user = user;
+          return post;
+        });
+    });
+}
+getPostAndUser(1).then((post) => console.log(post));
